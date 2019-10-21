@@ -43,6 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$response["mensagem"] = "Cadastro efetuado com sucesso.";
 	}
 
+	$conn->close();
 }
 echo json_encode($response);
 ?>
