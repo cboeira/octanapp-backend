@@ -2,6 +2,8 @@
 header('Content-Type: application/json charset=utf-8');
 error_reporting(0);
 
+$response = array();
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	
 	include 'dbConnection.php';
@@ -16,14 +18,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 	$marca = $_POST['marca'];
 
-	$sql = "SELECT id_veiculo, modelo FROM veiculo where marca like \"$marca%\"";
+	$sql = $conn->prepare("SELECT id_veiculo, modelo FROM veiculo where marca like \"$marca%\"");
+	$sql->execute();
+	$sql->bind_result($id_veiculo, $modelo);
 
-	$result = $conn->query($sql);
+	$teste = array();
 
-	while ($linha = mysqli_fetch_assoc($result)) {
-		$tmp[] = $linha;
-
+	while ($sql->fetch()) {
+		$temp = array();
+		$temp['modelo'] = $modelo;
+		$temp['id_veiculo'] = $id_veiculo;
+		array_push($response, $temp);
 	}
+
+	$teste['result'] = $response;
+
+	echo json_encode($teste);
+
 	echo json_encode($tmp);
 	$conn->close();
 }

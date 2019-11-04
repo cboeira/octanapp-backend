@@ -1,11 +1,11 @@
-<?php 
+<?php
 header('Content-Type: application/json charset=utf-8');
 error_reporting(0);
 
 $response = array();
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-	
+
 	include 'dbConnection.php';
 
 	$conn = new mysqli($HostName, $HostUser, $HostPass, $DatabaseName);
@@ -16,35 +16,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 		die ("Falha de conexao: " . $conn->connect_error);
 	}
 
-	$sql = $conn->prepare("SELECT DISTINCT marca FROM veiculo");
+	$sql = $conn->prepare("SELECT coordenadas, posto.nomeFantasia, posto.id_posto from estabelecimento inner join posto where estabelecimento.cnpj = posto.cnpj ");
 	$sql->execute();
-	$sql->bind_result($marca);
-
-	$teste = array();
+	$sql->bind_result($coordenadas, $nomeFantasia, $id_posto);
 
 	while ($sql->fetch()) {
 		$temp = array();
-		$temp['marca'] = $marca;
+		$temp['coordenadas'] = $coordenadas;
+		$temp['nomeFantasia'] = $nomeFantasia;
+		$temp['id_posto'] = $id_posto;
+
 		array_push($response, $temp);
 	}
-
-	$teste['result'] = $response;
-
-	echo json_encode($teste);
-
+	echo json_encode($response);
 	$conn->close();
 }
-
-/*	$sql = "SELECT DISTINCT marca FROM veiculo";
-
-	$result = $conn->query($sql);
-
-	$temp = array();
-
-	while ($linha = mysqli_fetch_assoc($result)) {
-		$tmp[] = $linha;
-
-	}
-	echo json_encode($tmp);*/
 ?>
-
