@@ -4,7 +4,7 @@ error_reporting(0);
 
 $response = array();
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 	
 	include 'dbConnection.php';
 
@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		die ("Falha de conexao: " . $conn->connect_error);
 	}
 
-	$marca = $_POST['marca'];
+	$marca = $_GET['marca'];
 
 	$sql = $conn->prepare("SELECT id_veiculo, modelo FROM veiculo where marca like \"$marca%\"");
 	$sql->execute();

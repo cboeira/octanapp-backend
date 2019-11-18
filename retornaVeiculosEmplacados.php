@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
 	$id_usuario = $_GET['id_usuario'];
 
-	$sql = $conn->prepare("SELECT placa, kmTotal, ano, veiculo.id_veiculo, modelo, marca, ativo FROM veiculoemplacado INNER JOIN veiculo ON veiculoemplacado.id_veiculo = veiculo.id_veiculo and veiculoemplacado.id_usuario = $id_usuario ");
+	$sql = $conn->prepare("SELECT placa, kmTotal, ano, veiculo.id_veiculo, modelo, marca, ativo FROM veiculoemplacado INNER JOIN veiculo ON veiculoemplacado.id_veiculo = veiculo.id_veiculo and veiculoemplacado.id_usuario = $id_usuario and veiculoemplacado.removido = 0");
 	$sql->execute();
 	$sql->bind_result($placa, $kmTotal, $ano, $id_veiculo, $modelo, $marca, $ativo);
 

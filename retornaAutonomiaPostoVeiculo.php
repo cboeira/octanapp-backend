@@ -17,9 +17,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 	}
 
 	$id_posto = $_GET['id_posto'];
-	$id_veiculo = $_GET['id_veiculo'];
+	$id_usuario = $_GET['id_usuario'];
 
-	$sqlCombustiveisPosto = $conn->prepare("SELECT A.nome, A.id_combustivel, A.preco, AVG(B.autonomia), COUNT(B.autonomia) from (SELECT nome, combustivel.id_combustivel, preco FROM combustivel INNER JOIN combustivelposto WHERE combustivel.id_combustivel = combustivelposto.id_combustivel AND id_posto = $id_posto) as A left join (SELECT autonomia, id_combustivel FROM avaliacao WHERE id_veiculo = $id_veiculo ) as B on A.id_combustivel = B.id_combustivel group by id_combustivel, preco");
+	$sqlIdVeiculo = "SELECT id_veiculo FROM veiculoemplacado WHERE id_usuario = $id_usuario AND ativo = 1";
+	$resultIdVeiculo = $conn->query($sqlIdVeiculo);
+
+	$registro = mysqli_fetch_array($resultIdVeiculo);
+
+	$id_veiculo = $registro['id_veiculo'];
+
+	//$sqlCombustiveisPosto = $conn->prepare("SELECT A.nome, A.id_combustivel, A.preco, AVG(B.autonomia), COUNT(B.autonomia) from (SELECT nome, combustivel.id_combustivel, preco FROM combustivel INNER JOIN combustivelposto WHERE combustivel.id_combustivel = combustivelposto.id_combustivel AND id_posto = $id_posto) as A left join (SELECT autonomia, id_combustivel FROM avaliacao WHERE id_veiculo = $id_veiculo ) as B on A.id_combustivel = B.id_combustivel group by id_combustivel, preco");
+	$sqlCombustiveisPosto = $conn->prepare("SELECT A.nome, A.id_combustivel, A.preco, AVG(B.autonomia), COUNT(B.autonomia) from (SELECT nome, combustivel.id_combustivel, preco, id_posto FROM combustivel INNER JOIN combustivelposto WHERE combustivel.id_combustivel = combustivelposto.id_combustivel AND id_posto = $id_posto) as A left join (SELECT autonomia, id_combustivel, id_posto FROM avaliacao WHERE id_veiculo = $id_veiculo ) as B on A.id_combustivel = B.id_combustivel AND A.id_posto = B.id_posto group by id_combustivel, preco");
 	$sqlCombustiveisPosto->execute();
 	$sqlCombustiveisPosto->bind_result($nome, $id_combustivel, $preco, $autonomia, $numeroAvaliacoes);
 
