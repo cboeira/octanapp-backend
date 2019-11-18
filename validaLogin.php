@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	$email = "'".$_POST['email']."'";
 	$senha = "'".$_POST['senha']."'";
 
-	$sql = "SELECT * FROM usuario WHERE email = $email AND senha = $senha";
+	$sql = "SELECT * FROM usuario WHERE email = $email AND senha = $senha AND ativo = 1";
 
 	$result = $conn->query($sql);
 

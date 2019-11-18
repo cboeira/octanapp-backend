@@ -20,8 +20,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	$response['veiculo_removido'] = "false";
 
 	$sqlValidaVeiculoEmplado = "SELECT * FROM veiculoemplacado WHERE id_usuario = $id_usuario";
-	$sqlRemoveVeiculoEmplacado = "DELETE FROM veiculoemplacado WHERE id_usuario = $id_usuario";
-	$sqlRemoveUsuario = "DELETE FROM usuario WHERE id_usuario = $id_usuario";
+	$sqlRemoveVeiculoEmplacado = "UPDATE veiculoemplacado SET ativo = 0, removido = 1 WHERE id_usuario = $id_usuario";
+	$sqlRemoveUsuario = "UPDATE usuario SET ativo = 0 WHERE id_usuario = $id_usuario";
 
 	$resultValida = $conn->query($sqlValidaVeiculoEmplado);
 	if ($resultValida->num_rows > 0) {
